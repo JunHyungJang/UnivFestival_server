@@ -24,6 +24,10 @@ const UnivSchema = mongoose.Schema({
     type: Array,
     default: []
   },
+  heart : {
+    type : Array,
+    default : []
+  },
   booth : [
     {
       user : {

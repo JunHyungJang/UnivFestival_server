@@ -191,4 +191,89 @@ router.get("/allunivinsert",(req,res,next) => {
   res.send(alluniv)
 })
 
+router.post("/heartcount", (req,res,next) => {
+  console.log("getheart")
+  const univ = req.body.univname;
+  console.log(univ);
+  Univ.aggregate([
+    {
+      $match : {
+        name : univ
+      }
+    },{
+      $project: {
+        array_length: {$size : "$heart"}
+      }
+    }
+  ], (err,result) => {
+    console.log(result[0].array_length);
+    // const data = result[0].array_length
+    // res.sendStatus(data)
+    if(result){
+      const data = result[0].array_length
+      res.status(200).send(data.toString())
+    }
+    
+  })
+})
+
+router.post("/heartchange", async (req,res,next) => {
+  console.log('heartchange');
+  const univ = req.body.univname;
+  const user = req.body.email;
+  console.log(univ,user)
+ 
+  // Univ.updateOne({name: univname}, {$pull: {heart : { $in : [user]}}}, (err,result) => {
+  //   if(result){
+  //     console.log("delete success")
+  //   }
+  //   else {
+  //     console.log("delete fail")
+  //   }
+  // })
+  Univ.findOne({name: univ},{ heart: { $elemMatch: { $eq: user }}}, (err,result) => {
+    console.log("finding!!")
+    console.log(result.heart.length)
+    if (result.heart.length != 0){
+      Univ.updateOne({name: univ}, {$pull: {heart: user}}, (err,result) => {
+        if(result){
+          console.log("successfuly deleted")
+        }
+      })
+    }
+    else {
+      Univ.updateOne({name: univ}, {$push : {heart:user}}, (err,result) => {
+        if (result){
+          console.log('successfully inserted' )
+        }
+      })
+     
+    }
+  })
+
+  
+})
+
+router.post("/heartfind", (req,res,next) => {
+  console.log("heartfind")
+  console.log(req.body)
+  const univ = req.body.univname;
+  const user = req.body.email;
+  console.log(univ,user)
+
+  Univ.findOne({name: univ},{ heart: { $elemMatch: { $eq: user }}}, (err,result) => {
+    if (result){
+      console.log(result)
+      console.log('success')
+      res.send(result)
+    }
+    else {
+      console.log("fail");
+      console.log(result)
+      res.send(result)
+    }
+  })
+
+})
+
 module.exports = router;
