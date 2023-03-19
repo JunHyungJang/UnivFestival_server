@@ -180,8 +180,9 @@ router.post("/addbooth", (req,res,next)=> {
 // Insert the every university
 
 router.get("/allunivinsert",(req,res,next) => {
-  for (let i = 10; i< 12 ; i++) {
-    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, location: "", },(err,result) => {
+  for (let i = 15; i< 17 ; i++) {
+    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, 
+      name_eng: alluniv[i].학교명영문, address: alluniv[i].주소, number: alluniv[i].전화번호, time : "", location: "" },(err,result) => {
       if(!result){
         console.log(result);
         res.send(result);
@@ -223,21 +224,13 @@ router.post("/heartchange", async (req,res,next) => {
   const user = req.body.email;
   console.log(univ,user)
  
-  // Univ.updateOne({name: univname}, {$pull: {heart : { $in : [user]}}}, (err,result) => {
-  //   if(result){
-  //     console.log("delete success")
-  //   }
-  //   else {
-  //     console.log("delete fail")
-  //   }
-  // })
   Univ.findOne({name: univ},{ heart: { $elemMatch: { $eq: user }}}, (err,result) => {
-    console.log("finding!!")
     console.log(result.heart.length)
     if (result.heart.length != 0){
       Univ.updateOne({name: univ}, {$pull: {heart: user}}, (err,result) => {
         if(result){
           console.log("successfuly deleted")
+          res.status(200).send({message: "delete"})
         }
       })
     }
@@ -245,6 +238,7 @@ router.post("/heartchange", async (req,res,next) => {
       Univ.updateOne({name: univ}, {$push : {heart:user}}, (err,result) => {
         if (result){
           console.log('successfully inserted' )
+          res.status(200).send({message: "insert"})
         }
       })
      
@@ -274,6 +268,23 @@ router.post("/heartfind", (req,res,next) => {
     }
   })
 
+})
+
+router.get("/popularfestival" , (req,res,next) => {
+  let univarray = []
+  let univheart = []
+  Univ.aggregate([{$project: { heartcount : { $size : '$heart'}, heart : 1, name : 1}},
+  {$sort: {heartcount: -1}},
+  {$limit : 5}],(err,result) => {
+    if(result){
+      console.log(result)
+      for (let i = 0 ; i<5 ; i ++) {
+        univarray.push(result[i].name);
+        univheart.push(result[i].heartcount)
+      }
+      res.status(200).send({univarray: univarray, univheart: univheart})
+    }
+  })
 })
 
 module.exports = router;
