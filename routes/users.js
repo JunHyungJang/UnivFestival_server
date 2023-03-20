@@ -3,6 +3,9 @@ const { User } = require("../models/User");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const { auth } = require("../middleware/auth");
+const bcrypt = require("bcryptjs");
+const saltRounds = 10;
+const moment = require("moment");
 
 router.post("/register", (req, res, next) => {
   console.log("회원가입");
@@ -18,6 +21,32 @@ router.post("/register", (req, res, next) => {
   });
 });
 
+router.post('/changepassword', (req,res,next) => {
+  const newpassword = req.body.password
+  const hashnewpassword = 
+  console.log('changepassword');
+  console.log(req.body)
+  
+  User.findOne({email: req.body.email}, (err,user) => {
+    bcrypt.genSalt(saltRounds,function(err,salt) {
+      if(err){
+        res.send(err)
+      }
+      bcrypt.hash(newpassword,salt,function(err,hash) {
+        if(err){
+          res.send(err)
+        }
+        user.password = hash
+      })
+    })
+    if(err){
+      return res.status(400).json({success:false, err})
+    }
+    return res.status(200).json({success:true})
+  })
+  
+}
+)
 router.post("/login", (req, res, next) => {
   console.log("back login");  
   User.findOne({ email: req.body.email }, (err, user) => {

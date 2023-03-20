@@ -24,7 +24,7 @@ router.get("/info", (req, res, next) => {
 });
 
 router.get('/test', (req,res,next)=> {
-  Univ.findOne({ name: "DGIST" }, (err, univ) => {
+  Univ.findOne({ name: "대구경북과학기술원" }, (err, univ) => {
     console.log(univ);
     return res.send(univ);
   });
@@ -180,7 +180,7 @@ router.post("/addbooth", (req,res,next)=> {
 // Insert the every university
 
 router.get("/allunivinsert",(req,res,next) => {
-  for (let i = 15; i< 17 ; i++) {
+  for (let i = 54; i< 56 ; i++) {
     Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, 
       name_eng: alluniv[i].학교명영문, address: alluniv[i].주소, number: alluniv[i].전화번호, time : "", location: "" },(err,result) => {
       if(!result){
