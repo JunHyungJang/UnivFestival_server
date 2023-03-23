@@ -24,13 +24,13 @@ router.get("/info", (req, res, next) => {
 });
 
 router.get('/test', (req,res,next)=> {
-  Univ.findOne({ name: "DGIST" }, (err, univ) => {
+  Univ.findOne({ name: "대구경북과학기술원" }, (err, univ) => {
     console.log(univ);
     return res.send(univ);
   });
 })
 router.post("/test2",(req,res,next) => {
-  Univ.updateOne({name: "DGIST"}, {$push: {celeb: "hellworold"}}, (err,result)=> {
+  Univ.updateOne({name: "대구경북과학기술원"}, {$push: {celeb: "hellworold"}}, (err,result)=> {
     if(!result) {
       console.log(result)
       return res.send(result)
@@ -183,7 +183,7 @@ router.post("/addbooth", (req,res,next)=> {
 // Insert the every university
 
 router.get("/allunivinsert",(req,res,next) => {
-  for (let i = 10; i< 12 ; i++) {
+  for (let i = 54; i< 56 ; i++) {
     Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, location: "", },(err,result) => {
       if(!result){
         console.log(result);
@@ -210,8 +210,7 @@ router.post("/heartcount", (req,res,next) => {
     }
   ], (err,result) => {
     console.log(result[0].array_length);
-    // const data = result[0].array_length
-    // res.sendStatus(data)
+
     if(result){
       const data = result[0].array_length
       res.status(200).send(data.toString())
