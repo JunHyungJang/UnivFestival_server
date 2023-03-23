@@ -24,7 +24,6 @@ router.get("/info", (req, res, next) => {
 });
 
 router.get('/test', (req,res,next)=> {
-  console.log("Test")
   Univ.findOne({ name: "DGIST" }, (err, univ) => {
     console.log(univ);
     return res.send(univ);
@@ -184,9 +183,8 @@ router.post("/addbooth", (req,res,next)=> {
 // Insert the every university
 
 router.get("/allunivinsert",(req,res,next) => {
-  for (let i = 20; i< 22 ; i++) {
-    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, location: "", name_eng : alluniv[i].학교명영문, number : alluniv[i].전화번호, 
-  address: alluniv[i].주소 },(err,result) => {
+  for (let i = 10; i< 12 ; i++) {
+    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, location: "", },(err,result) => {
       if(!result){
         console.log(result);
         res.send(result);
@@ -194,6 +192,101 @@ router.get("/allunivinsert",(req,res,next) => {
     })
   }
   res.send(alluniv)
+})
+
+router.post("/heartcount", (req,res,next) => {
+  console.log("getheart")
+  const univ = req.body.univname;
+  console.log(univ);
+  Univ.aggregate([
+    {
+      $match : {
+        name : univ
+      }
+    },{
+      $project: {
+        array_length: {$size : "$heart"}
+      }
+    }
+  ], (err,result) => {
+    console.log(result[0].array_length);
+    // const data = result[0].array_length
+    // res.sendStatus(data)
+    if(result){
+      const data = result[0].array_length
+      res.status(200).send(data.toString())
+    }
+    
+  })
+})
+
+router.post("/heartchange", async (req,res,next) => {
+  console.log('heartchange');
+  const univ = req.body.univname;
+  const user = req.body.email;
+  console.log(univ,user)
+ 
+  Univ.findOne({name: univ},{ heart: { $elemMatch: { $eq: user }}}, (err,result) => {
+    console.log(result.heart.length)
+    if (result.heart.length != 0){
+      Univ.updateOne({name: univ}, {$pull: {heart: user}}, (err,result) => {
+        if(result){
+          console.log("successfuly deleted")
+          res.status(200).send({message: "delete"})
+        }
+      })
+    }
+    else {
+      Univ.updateOne({name: univ}, {$push : {heart:user}}, (err,result) => {
+        if (result){
+          console.log('successfully inserted' )
+          res.status(200).send({message: "insert"})
+        }
+      })
+     
+    }
+  })
+
+  
+})
+
+router.post("/heartfind", (req,res,next) => {
+  console.log("heartfind")
+  console.log(req.body)
+  const univ = req.body.univname;
+  const user = req.body.email;
+  console.log(univ,user)
+
+  Univ.findOne({name: univ},{ heart: { $elemMatch: { $eq: user }}}, (err,result) => {
+    if (result){
+      console.log(result)
+      console.log('success')
+      res.send(result)
+    }
+    else {
+      console.log("fail");
+      console.log(result)
+      res.send(result)
+    }
+  })
+
+})
+
+router.get("/popularfestival" , (req,res,next) => {
+  let univarray = []
+  let univheart = []
+  Univ.aggregate([{$project: { heartcount : { $size : '$heart'}, heart : 1, name : 1}},
+  {$sort: {heartcount: -1}},
+  {$limit : 5}],(err,result) => {
+    if(result){
+      console.log(result)
+      for (let i = 0 ; i<5 ; i ++) {
+        univarray.push(result[i].name);
+        univheart.push(result[i].heartcount)
+      }
+      res.status(200).send({univarray: univarray, univheart: univheart})
+    }
+  })
 })
 
 module.exports = router;
