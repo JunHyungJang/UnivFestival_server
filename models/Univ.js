@@ -12,6 +12,15 @@ const UnivSchema = mongoose.Schema({
     type: String,
     maxlength: 50,
   },
+  name_eng : {
+    type : String,
+  },
+  address : {
+    type : String,
+  },
+  number : {
+    type : String,
+  },
   location: {
     type : String,
     maxlength: 50,

@@ -24,6 +24,7 @@ router.get("/info", (req, res, next) => {
 });
 
 router.get('/test', (req,res,next)=> {
+  console.log("Test")
   Univ.findOne({ name: "DGIST" }, (err, univ) => {
     console.log(univ);
     return res.send(univ);
@@ -42,7 +43,7 @@ router.post("/test2",(req,res,next) => {
 
 router.post("/search", (req, res, next) => {
   console.log(req.body.univ);
-  Univ.findOne({ name: req.body.univ }, (err, result) => {
+  Univ.findOne( { $or : [{ name: req.body.univ }, {name_eng: req.body.univ}] }, (err, result) => {
     console.log(result);
     if (!result) {
       return res.send({ success: false, message: "해당 대학이 없다" });
@@ -61,7 +62,10 @@ router.post("/getunivname", (req,res,next) => {
   const regex = (pattern) => new RegExp(`.*${pattern}.*`);
   const titleRegex = regex(title);
   console.log(titleRegex)
-  Univ.find( {name: {$regex : titleRegex, '$options' : 'i'}}, (err,result) => {
+  Univ.find( {
+    $or : [{name: {$regex : titleRegex, '$options' : 'i'}},
+     {name_eng: {$regex : titleRegex, '$options' : 'i'}}
+    ]}, (err,result) => {
     if(!err) {
       for (var i = 0; i<result.length;i++) {
         arrdata.push(result[i].name);
@@ -180,8 +184,9 @@ router.post("/addbooth", (req,res,next)=> {
 // Insert the every university
 
 router.get("/allunivinsert",(req,res,next) => {
-  for (let i = 10; i< 12 ; i++) {
-    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, location: "", },(err,result) => {
+  for (let i = 20; i< 22 ; i++) {
+    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, location: "", name_eng : alluniv[i].학교명영문, number : alluniv[i].전화번호, 
+  address: alluniv[i].주소 },(err,result) => {
       if(!result){
         console.log(result);
         res.send(result);
