@@ -12,8 +12,22 @@ router.post("/register", (req, res, next) => {
   // console.log(req.body.email, req.body.name, req.body.password);
 
   const user = new User(req.body);
+  // if (user.isModified("password")) {
+  //   console.log("ismodified")
+  //   bcrypt.genSalt(saltRounds, function (err, salt) {
+  //     if (err) return next(err);
+
+  //     bcrypt.hash(user.password, salt, function (err, hash) {
+  //       console.log('hash')
+  //       if (err) return next(err);
+  //       user.password = hash;
+  //       next();
+  //     });
+  //   });
+  // }
   console.log(user);
   user.save((err, doc) => {
+    console.log(user)
     if (err) {
       return res.status(400).json({ success: false, err });
     }
@@ -28,21 +42,18 @@ router.post('/changepassword', (req,res,next) => {
   console.log(req.body)
   
   User.findOne({email: req.body.email}, (err,user) => {
-    bcrypt.genSalt(saltRounds,function(err,salt) {
+   console.log(user)
+    // return res.send(user)
+    user.password = newpassword
+
+    user.save((err,doc) => {
       if(err){
-        res.send(err)
+        console.log(err)
+        return res.status(400).json({success:false, err})
       }
-      bcrypt.hash(newpassword,salt,function(err,hash) {
-        if(err){
-          res.send(err)
-        }
-        user.password = hash
-      })
+      return res.status(200).json({success: true})
     })
-    if(err){
-      return res.status(400).json({success:false, err})
-    }
-    return res.status(200).json({success:true})
+   
   })
   
 }
