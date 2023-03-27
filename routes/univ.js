@@ -7,7 +7,7 @@ const { auth } = require("../middleware/auth");
 const path = require('path');
 const fs = require('fs');
 
-
+const k = "hello"
 const jsonPath = path.resolve(__dirname,'alluniv.json');
 const jsonData = fs.readFileSync(jsonPath);
 
