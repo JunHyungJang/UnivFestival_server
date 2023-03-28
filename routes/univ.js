@@ -183,9 +183,19 @@ router.post("/addbooth", (req,res,next)=> {
 // Insert the every university
 
 router.get("/allunivinsert",(req,res,next) => {
-  for (let i = 54; i< 56 ; i++) {
-    Univ.create({name: alluniv[i].학교명, link: alluniv[i].홈페이지, 
-      name_eng: alluniv[i].학교명영문, address: alluniv[i].주소, number: alluniv[i].전화번호, time : "", location: "" },(err,result) => {
+  // console.log('hello')
+  // console.log(alluniv.length)
+  for (let i = 100; i< 102 ; i++) {
+    Univ.create({
+      name: alluniv[i].학교명, 
+      name_eng: alluniv[i].학교명영문, 
+      link: alluniv[i].홈페이지, 
+      address: alluniv[i].주소, 
+      number: alluniv[i].전화번호, 
+      location: "미정",
+      time : "미정", 
+      celeb : [],
+     },(err,result) => {
       if(!result){
         console.log(result);
         res.send(result);

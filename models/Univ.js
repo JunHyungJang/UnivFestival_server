@@ -12,6 +12,12 @@ const UnivSchema = mongoose.Schema({
     type: String,
     maxlength: 50,
   },
+  name_eng : {
+    type : String
+  },
+  address : {
+    type : String
+  },
   location: {
     type : String,
     maxlength: 50,
@@ -20,13 +26,13 @@ const UnivSchema = mongoose.Schema({
     type: String,
     maxlength: 50,
   },
+  link : {
+    type: String,
+    maxlength: 50
+  },
   celeb: { 
     type: Array,
     default: []
-  },
-  heart : {
-    type : Array,
-    default : []
   },
   booth : [
     {
@@ -51,10 +57,11 @@ const UnivSchema = mongoose.Schema({
       ]
     }
   ],
-  link : {
-    type: String,
-    maxlength: 50
-  }
+  heart : {
+    type : Array,
+    default : []
+  },
+  
 });
 
 const Univ = mongoose.model("Univ", UnivSchema);
