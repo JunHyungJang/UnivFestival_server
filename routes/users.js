@@ -25,7 +25,7 @@ router.post("/register", (req, res, next) => {
 
 router.post('/changepassword', (req,res,next) => {
   const newpassword = req.body.password
-  const hashnewpassword = 
+  
   console.log('changepassword');
   console.log(req.body)
   
