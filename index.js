@@ -22,6 +22,7 @@ const connect = mongoose
   .catch((err) => console.log(err));
 
 app.use(cors());
+app.use(express.static(__dirname));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -35,12 +36,6 @@ app.get("/", (req, res) => {
   res.send("helloworld");
 });
 
-const admin = require("firebase-admin");
-const serviceAccount = require("./univfestival-android-firebase-adminsdk-k710h-01f8d38de3.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-})
 
 const port = process.env.PORT || 5000;
 

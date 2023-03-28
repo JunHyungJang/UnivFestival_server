@@ -41,8 +41,8 @@ router.post("/test2",(req,res,next) => {
 })  
 
 router.post("/search", (req, res, next) => {
-  console.log(req.body.univ);
-  Univ.findOne( { $or : [{ name: req.body.univ }, {name_eng: req.body.univ}] }, (err, result) => {
+  console.log(req.body);
+  Univ.findOne( { name: req.body.univ }, (err, result) => {
     console.log(result);
     if (!result) {
       return res.send({ success: false, message: "해당 대학이 없다" });
@@ -63,7 +63,7 @@ router.post("/getunivname", (req,res,next) => {
   console.log(titleRegex)
   Univ.find( {
     $or : [{name: {$regex : titleRegex, '$options' : 'i'}},
-     {name_eng: {$regex : titleRegex, '$options' : 'i'}}
+     
     ]}, (err,result) => {
     if(!err) {
       for (var i = 0; i<result.length;i++) {
