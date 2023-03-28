@@ -9,27 +9,15 @@ const moment = require("moment");
 
 router.post("/register", (req, res, next) => {
   console.log("회원가입");
-  // console.log(req.body.email, req.body.name, req.body.password);
 
   const user = new User(req.body);
-  // if (user.isModified("password")) {
-  //   console.log("ismodified")
-  //   bcrypt.genSalt(saltRounds, function (err, salt) {
-  //     if (err) return next(err);
 
-  //     bcrypt.hash(user.password, salt, function (err, hash) {
-  //       console.log('hash')
-  //       if (err) return next(err);
-  //       user.password = hash;
-  //       next();
-  //     });
-  //   });
-  // }
   console.log(user);
   user.save((err, doc) => {
     console.log(user)
     if (err) {
-      return res.status(400).json({ success: false, err });
+      // console.log(err)
+      return res.status(400).json({ success: false, message: '증복된 이메일 입니다.' });
     }
     return res.status(200).json({ success: true });
   });
@@ -64,12 +52,12 @@ router.post("/login", (req, res, next) => {
     if (!user)
       return res.json({
         success: false,
-        message: "Auth failed, email not found",
+        message: "해당 이메일이 존재하지 않습니다.",
       });
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (!isMatch) {
-        return res.json({ success: false, message: "Wrong password" });
+        return res.json({ success: false, message: "비밀번호가 틀렸습니다." });
       }
 
       user.generateToken((err, user) => {

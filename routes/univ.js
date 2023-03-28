@@ -184,8 +184,8 @@ router.post("/addbooth", (req,res,next)=> {
 
 router.get("/allunivinsert",(req,res,next) => {
   // console.log('hello')
-  // console.log(alluniv.length)
-  for (let i = 100; i< 102 ; i++) {
+  console.log(alluniv.length)
+  for (let i = 0; i< 443 ; i++) {
     Univ.create({
       name: alluniv[i].학교명, 
       name_eng: alluniv[i].학교명영문, 
