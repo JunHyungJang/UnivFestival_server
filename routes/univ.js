@@ -18,14 +18,12 @@ const alluniv = JSON.parse(jsonData);
 router.get("/info", (req, res, next) => {
   //   let k = "a";
   Univ.findOne({ name: "서울대학교" }, (err, univ) => {
-    console.log(univ);
     return res.send(univ);
   });
 });
 
 router.get('/test', (req,res,next)=> {
   Univ.findOne({ name: "대구경북과학기술원" }, (err, univ) => {
-    console.log(univ);
     return res.send(univ);
   });
 })
@@ -60,7 +58,6 @@ router.post("/getunivname", (req,res,next) => {
   // console.log(title)
   const regex = (pattern) => new RegExp(`.*${pattern}.*`);
   const titleRegex = regex(title);
-  console.log(titleRegex)
   Univ.find( {
     $or : [{name: {$regex : titleRegex, '$options' : 'i'}},
      
@@ -80,14 +77,12 @@ router.post("/getunivname", (req,res,next) => {
 router.post('/getmybooth',(req,res,next) => {
   let univ = req.body.univ;
   let email = req.body.email;
-  console.log("info", univ,email)
   Univ.findOne({name:univ, 'booth.user':email}, (err,result) => {
     if (!result) {
       return res.send({success: false, message: 'Fail'})
     }
 
     let final = result.booth;
-    console.log(final)
     // console.log(final);
     return res.send({success:true, data:final})
   })
@@ -158,13 +153,13 @@ router.post('/deletebooth', (req,res,next) => {
 })
 
 router.post("/addbooth", (req,res,next)=> {
-  console.log(req.body)
+
   let univ = req.body.newlist.univ;
   let name = req.body.newlist.name;
   let info = req.body.newlist.info;
   let menu = req.body.newlist.menu; 
   let user = req.body.newlist.user;
-  console.log(univ,name,info,menu)
+  
   Univ.updateOne({name:univ}, {$push : {
     booth : {
       name : name,
@@ -174,7 +169,7 @@ router.post("/addbooth", (req,res,next)=> {
     }
   }}, (err,result) => {
     if (!result) {
-      console.log(result);
+   
       res.send(result)
     }
     console.log("success");
@@ -186,7 +181,7 @@ router.post("/addbooth", (req,res,next)=> {
 
 router.get("/allunivinsert",(req,res,next) => {
   // console.log('hello')
-  console.log(alluniv.length)
+ 
   for (let i = 0; i< 443 ; i++) {
     Univ.create({
       name: alluniv[i].학교명, 
@@ -199,7 +194,7 @@ router.get("/allunivinsert",(req,res,next) => {
       celeb : [],
      },(err,result) => {
       if(!result){
-        console.log(result);
+    
         res.send(result);
       }
     })
@@ -208,9 +203,9 @@ router.get("/allunivinsert",(req,res,next) => {
 })
 
 router.post("/heartcount", (req,res,next) => {
-  console.log("getheart")
+
   const univ = req.body.univname;
-  console.log(univ);
+
   Univ.aggregate([
     {
       $match : {
@@ -236,7 +231,6 @@ router.post("/heartchange", async (req,res,next) => {
   console.log('heartchange');
   const univ = req.body.univname;
   const user = req.body.email;
-  console.log(univ,user)
  
   Univ.findOne({name: univ},{ heart: { $elemMatch: { $eq: user }}}, (err,result) => {
     console.log(result.heart.length)
