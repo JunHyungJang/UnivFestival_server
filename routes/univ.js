@@ -80,12 +80,14 @@ router.post("/getunivname", (req,res,next) => {
 router.post('/getmybooth',(req,res,next) => {
   let univ = req.body.univ;
   let email = req.body.email;
-  Univ.findOne({name:univ,user:email}, (err,result) => {
+  console.log("info", univ,email)
+  Univ.findOne({name:univ, 'booth.user':email}, (err,result) => {
     if (!result) {
       return res.send({success: false, message: 'Fail'})
     }
 
     let final = result.booth;
+    console.log(final)
     // console.log(final);
     return res.send({success:true, data:final})
   })
