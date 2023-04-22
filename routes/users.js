@@ -23,6 +23,20 @@ router.post("/register", (req, res, next) => {
   });
 });
 
+router.post("/deleteaccount", (req,res,next) => {
+  console.log("deleteaccount")
+  const k = req.body.email
+  User.findOneAndDelete({email: req.body.email}, (err,result) => {
+    if(err){
+      console.log(err)
+    }
+    if(!result) {
+      return res.send({success: false, message : "계정을 찾을 수 없습니다"})
+    }
+    return res.send({success: true, message: "계정이 성공적으로 삭제되었습니다."})
+  })
+  console.log(k)
+})
 router.post('/changepassword', (req,res,next) => {
   const newpassword = req.body.password
   

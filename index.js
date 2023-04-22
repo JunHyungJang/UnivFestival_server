@@ -9,7 +9,7 @@ const cookieParser = require("cookie-parser");
 const config = require("./config/key");
 
 const mongoose = require("mongoose");
-// console.log(config.mongoURI);
+
 const connect = mongoose
   .connect(
     "mongodb+srv://kevin0459:!kevin0459@cluster0.jhgpd3v.mongodb.net/?retryWrites=true&w=majority",
